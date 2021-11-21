@@ -10,8 +10,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 from text_tools import get_questions, check_answer
 
 PLAYING, WIN = range(2)
-
-
 logger = logging.getLogger('telegramLogger')
 
 
@@ -27,9 +25,9 @@ def start(bot, update):
 
 def handle_new_question_request(bot, update, questions, db):
     chat_id = update.effective_chat.id
-    q = random.choice(list(questions))
-    db.set(f'tg-{chat_id}', q)
-    update.message.reply_text(q)
+    question = random.choice(list(questions))
+    db.set(f'tg-{chat_id}', question)
+    update.message.reply_text(question)
     return PLAYING
 
 
@@ -58,13 +56,7 @@ def error(bot, update):
 
 
 def done(bot, update, user_data):
-    if 'choice' in user_data:
-        del user_data['choice']
-
-    update.message.reply_text("I learned these facts about you:"
-                              "{}"
-                              "Until next time!")
-
+    update.message.reply_text("До встречи")
     user_data.clear()
     return ConversationHandler.END
 

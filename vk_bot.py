@@ -11,8 +11,6 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 from text_tools import get_questions, check_answer
 
 PLAYING, WIN = range(2)
-
-
 logger = logging.getLogger('telegramLogger')
 
 
@@ -31,13 +29,13 @@ def start(event, vk_api):
 
 
 def handle_new_question_request(event, vk_api, questions, db):
-    q = random.choice(list(questions))
-    print(q)
-    db.set(f'vk-{event.user_id}', q)
+    question = random.choice(list(questions))
+    print(question)
+    db.set(f'vk-{event.user_id}', question)
     print(questions[db.get(f'vk-{event.user_id}')])
     vk_api.messages.send(
         user_id=event.user_id,
-        message=q,
+        message=question,
         random_id=random.randint(1, 1000)
     )
     return PLAYING
