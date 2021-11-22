@@ -38,9 +38,9 @@ def handle_solution_attempt(bot, update, questions, db):
     if check_answer(right_answer, update.message.text):
         update.message.reply_text('Правильно! Поздравляю! Для следующего вопроса нажми «Новый вопрос»')
         return WIN
-    else:
-        update.message.reply_text('Неправильно… Попробуешь ещё раз?')
-        return PLAYING
+
+    update.message.reply_text('Неправильно… Попробуешь ещё раз?')
+    return PLAYING
 
 
 def handle_give_up(bot, update, questions, db):

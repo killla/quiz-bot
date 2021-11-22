@@ -1,3 +1,4 @@
+from itertools import tee
 from pathlib import Path
 import re
 
@@ -9,14 +10,14 @@ def get_questions_from_file(file):
         return text
 
     with open(file, 'r', encoding='KOI8-R') as file:
-        i = 0
         raw_qas = file.read().split('\n\n')
-        while i < len(raw_qas):
-            if (question := raw_qas[i].strip()).startswith('Вопрос') and \
-                    (answer := raw_qas[i+1].strip()).startswith('Ответ'):
-                i += 1
+        questions, answers = tee(iter(raw_qas))
+        next(answers, None)
+
+        for question, answer in zip(questions, answers):
+            if (question.strip()).startswith('Вопрос') and \
+                    (answer.strip()).startswith('Ответ'):
                 yield cut_head(question), cut_head(answer)
-            i += 1
 
 
 def get_questions(folder):
