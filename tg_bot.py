@@ -26,14 +26,14 @@ def start(bot, update):
 def handle_new_question_request(bot, update, questions, db):
     chat_id = update.effective_chat.id
     question = random.choice(list(questions))
-    db.set(f'tg-{chat_id}', question)
+    db.set(f'tg-{chat_id}', questions[question])
     update.message.reply_text(question)
     return PLAYING
 
 
 def handle_solution_attempt(bot, update, questions, db):
     chat_id = update.effective_chat.id
-    right_answer = questions[db.get(f'tg-{chat_id}')]
+    right_answer = db.get(f'tg-{chat_id}')
 
     if check_answer(right_answer, update.message.text):
         update.message.reply_text('Правильно! Поздравляю! Для следующего вопроса нажми «Новый вопрос»')
@@ -45,7 +45,7 @@ def handle_solution_attempt(bot, update, questions, db):
 
 def handle_give_up(bot, update, questions, db):
     chat_id = update.effective_chat.id
-    right_answer = questions[db.get(f'tg-{chat_id}')]
+    right_answer = db.get(f'tg-{chat_id}')
     update.message.reply_text(f'Правильный ответ:\n{right_answer}')
 
     handle_new_question_request(bot, update, questions, db)

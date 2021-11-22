@@ -31,7 +31,7 @@ def start(event, vk_api):
 def handle_new_question_request(event, vk_api, questions, db):
     question = random.choice(list(questions))
     print(question)
-    db.set(f'vk-{event.user_id}', question)
+    db.set(f'vk-{event.user_id}', questions[question])
     print(questions[db.get(f'vk-{event.user_id}')])
     vk_api.messages.send(
         user_id=event.user_id,
@@ -43,7 +43,7 @@ def handle_new_question_request(event, vk_api, questions, db):
 
 def handle_solution_attempt(event, vk_api, questions, db):
     send_message = partial(vk_api.messages.send, user_id=event.user_id, random_id=random.randint(1, 1000))
-    right_answer = questions[db.get(f'vk-{event.user_id}')]
+    right_answer = db.get(f'vk-{event.user_id}')
 
     if check_answer(right_answer, event.text):
         send_message(message='Правильно! Поздравляю! Для следующего вопроса нажми «Новый вопрос»')
@@ -54,7 +54,7 @@ def handle_solution_attempt(event, vk_api, questions, db):
 
 
 def handle_give_up(event, vk_api, questions, db):
-    right_answer = questions[db.get(f'vk-{event.user_id}')]
+    right_answer = db.get(f'vk-{event.user_id}')
 
     vk_api.messages.send(
         user_id=event.user_id,
